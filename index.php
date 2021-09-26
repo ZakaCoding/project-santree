@@ -1,3 +1,4 @@
+<?php include_once 'config/config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +10,6 @@
     <link rel="stylesheet" href="css/style.css">
 
     <script src="https://kit.fontawesome.com/db95e67526.js" crossorigin="anonymous"></script>
-
-    <script src="js/main.js"></script>
 
     <title>Santree</title>
 </head>
@@ -27,9 +26,6 @@
                 </a>
 
                 <ul class="">
-                    <li class="navbar-item">
-                        <a href="#">Beranda</a>
-                    </li>
                     <li class="navbar-item">
                         <a href="#">Produk</a>
                     </li>
@@ -50,7 +46,53 @@
                         <img src="asset/.icon/search.svg" alt="search">
                         <input type="text" name="search" id="" placeholder="Cari sesuatu...">
                     </form>
-                    <img src="asset/.icon/shopping-bag.svg" alt="cart" class="icon-sm">
+                    <a href="#">
+                        <img src="asset/.icon/shopping-bag.svg" alt="cart" class="icon-sm" id="cart">
+                    </a>
+                    <div class="layer-transparent collapsed" hidden=true>
+
+                    </div>
+                    <div class="nav-cart collapsed" hidden=true>
+                        <div class="container">
+                            <!-- if empty cart -->
+                            <div class="cart-empty">
+                                <img src="<?= $basepath.'asset/.image/cart-empty.png' ?>" alt="Keranjang Kosong">
+                                <p>
+                                    <strong>
+                                        Keranjang Belanja Anda Kosong
+                                    </strong><br>
+                                    <small class="text-muted">Karena Masih Kosong, Yuk beli sesuatu di Santree...</small>
+                                </p>
+                            </div>
+
+                            <!-- cart is exist -->
+                            <div class="cart-avail" hidden=true>
+                                <div class="flex-2-col">
+                                    <strong>Keranjang (1)</strong>
+                                    <strong>
+                                        <a href="" class="c-green" style="text-decoration:none"><small>Lihat Keranjang</small></a>
+                                    </strong>
+                                </div>
+                                <div class="spacer border-bottom"></div>
+                                <div class="cart-item-list">
+                                    <div class="flex cart-item">
+                                        <img src="<?= $basepath.'content/.upload/jeruk-nipis-kering.jpeg' ?>" alt="Item" style="margin:0px">
+                                        <p class="info">
+                                            <strong class="title">Jeruk Nipis kering</strong><br>
+                                            <small class="text-muted">1 Barang (50gram)</small>
+                                        </p>
+                                    </div>
+                                    <div class="flex cart-item">
+                                        <img src="<?= $basepath.'content/.upload/jeruk-nipis-kering.jpeg' ?>" alt="Item" style="margin:0px">
+                                        <p class="info">
+                                            <strong class="title">Jeruk Nipis kering</strong><br>
+                                            <small class="text-muted">1 Barang (50gram)</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -101,16 +143,16 @@
                 <div class="row align-items-md-stretch">
                     <div class="col-md-6">
                         <div class="h-100 p-5 text-white bg-dark border-radius-16">
-                        <h2>Change the background</h2>
-                        <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.</p>
-                        <button class="btn btn-outline-light" type="button">Example button</button>
+                        <h2>Diskon PPKM</h2>
+                        <p>Paket Produk diskon selama PPKM sebesar 10%. Cek sekarang sebelum kehabisan.</p>
+                        <button class="btn btn-outline-light" type="button">Lihat Selengkapnya ></button>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="h-100 p-5 bg-light border border-radius-16">
-                        <h2>Add borders</h2>
-                        <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
-                        <button class="btn btn-outline-secondary" type="button">Example button</button>
+                        <h2>Produk Pilihan Santree</h2>
+                        <p>Temukan berbagai macam produk pilihan dari Santree</p>
+                        <button class="btn btn-outline-secondary" type="button">Lihat Selengkapnya ></button>
                         </div>
                     </div>
                 </div>
@@ -120,8 +162,8 @@
                     <div class="spacer"></div>
                     <div class="spacer"></div>
                     <div class="head-title">
-                        <h4>Produk Pilihan</h4>
-                        <h5 class="c-green">Lihat Semua</h5>
+                        <h4>Produk Terbaru</h4>
+                        <h5><a href="#" style="cursor: pointer; text-decoration:none; color: #73AF59">Lihat Semua</a></h5>
                     </div>
                     <div class="spacer"></div>
                     <div class="row">
@@ -131,19 +173,25 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Lemon Kering</h5>
                                     <small class="text-muted">PESANTREN BABUSSALAM</small>
-                                    <p class="c-green">Rp. 32.000</p>
+                                    <p>
+                                        <strong class="c-green">Rp. 32.000</strong>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card">
-                                <img src="content/.upload/jeruk-nipis-kering.jpeg" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Jeruk Nipis Kering</h5>
-                                    <small class="text-muted">PESANTREN BABUSSALAM</small>
-                                    <p class="c-green">Rp. 28.000</p>
+                            <a href="" style="cursor:pointer; text-decoration:none;">
+                                <div class="card">
+                                    <img src="content/.upload/jeruk-nipis-kering.jpeg" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-black">Jeruk Nipis Kering</h5>
+                                        <small class="text-muted">PESANTREN BABUSSALAM</small>
+                                        <p>
+                                            <strong class="c-green">Rp. 28.000</strong>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col">
                             <div class="card">
@@ -151,7 +199,9 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Poty</h5>
                                     <small class="text-muted">PESANTREN AL RIFA’IE</small>
-                                    <p class="c-green">Rp. 15.000</p>
+                                    <p>
+                                        <strong class="c-green">Rp. 15.000</strong>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +211,9 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Kopi Gunung Kawi</h5>
                                     <small class="text-muted">De Kawi</small>
-                                    <p class="c-green">Rp. 45.000</p>
+                                    <p>
+                                        <strong class="c-green">Rp. 45.000</strong>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -295,6 +347,7 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
     <script>
         var myCarousel = document.querySelector('#BannerHeadline')
         var carousel = new bootstrap.Carousel(myCarousel)
