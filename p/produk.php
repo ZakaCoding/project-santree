@@ -1,5 +1,26 @@
 <?php 
-    include_once "../config/config.php";
+    include_once "../app/config/config.php";
+
+    // get id
+    if(isset($_GET['id']))
+    {
+        $id = $_GET['id'];
+        $productQuery = "SELECT * FROM `product` WHERE `p_id` = '$id'";
+
+        // result
+        $result = $mysqli->query($productQuery);
+        if($result->num_rows == 1)
+        {
+            $productData = $result->fetch_assoc();
+        }
+
+    }
+
+    function toRupiah($number)
+    {
+        $price = "Rp.". number_format($number,0,',','.');
+        return $price;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +32,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="shorcut icon" type="" href="../asset/.image/logo-favicon.png">
 
     <script src="https://kit.fontawesome.com/db95e67526.js" crossorigin="anonymous"></script>
 
@@ -40,21 +62,16 @@
                     </li>
                 </ul>
 
-                <form action="">
-
-                </form>
-
                 <div class="navbar-header-icon">
                     <form action="" class="search-box">
                         <img src="<?= $basepath ?>asset/.icon/search.svg" alt="search">
                         <input type="text" name="search" id="" placeholder="Cari sesuatu...">
                     </form>
-                    <a href="#">
+                    <a href="#" class="cart-icon">
                         <img src="<?= $basepath ?>asset/.icon/shopping-bag.svg" alt="cart" class="icon-sm" id="cart">
+                        <p class="cart-number"></p>
                     </a>
-                    <div class="layer-transparent collapsed" hidden=true>
-
-                    </div>
+                    <div class="layer-transparent collapsed" hidden=true></div>
                     <div class="nav-cart collapsed" hidden=true>
                         <div class="container">
                             <!-- if empty cart -->
@@ -69,29 +86,16 @@
                             </div>
 
                             <!-- cart is exist -->
-                            <div class="cart-avail" hidden=true>
+                            <div class="cart-avail">
                                 <div class="flex-2-col">
-                                    <strong>Keranjang (1)</strong>
+                                    <strong>Keranjang (<span id="number"></span>)</strong>
                                     <strong>
-                                        <a href="" class="c-green" style="text-decoration:none"><small>Lihat Keranjang</small></a>
+                                        <a href="cart.php" class="c-green" style="text-decoration:none"><small>Lihat Keranjang</small></a>
                                     </strong>
                                 </div>
                                 <div class="spacer border-bottom"></div>
                                 <div class="cart-item-list">
-                                    <div class="flex cart-item">
-                                        <img src="<?= $basepath.'content/.upload/jeruk-nipis-kering.jpeg' ?>" alt="Item" style="margin:0px">
-                                        <p class="info">
-                                            <strong class="title">Jeruk Nipis kering</strong><br>
-                                            <small class="text-muted">1 Barang (50gram)</small>
-                                        </p>
-                                    </div>
-                                    <div class="flex cart-item">
-                                        <img src="<?= $basepath.'content/.upload/jeruk-nipis-kering.jpeg' ?>" alt="Item" style="margin:0px">
-                                        <p class="info">
-                                            <strong class="title">Jeruk Nipis kering</strong><br>
-                                            <small class="text-muted">1 Barang (50gram)</small>
-                                        </p>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -111,28 +115,30 @@
     <main>
         <div class="container">
             <div class="row">
+                <!-- hidden item  -->
+                <input type="text" id="product-id" value="<?= $productData['p_id'] ?>" hidden="hidden">
                 <div class="col-md-6">
-                    <img src="../content/.upload/jeruk-nipis-kering.jpeg" alt="" class="item-image">
+                    <img id="item-image" src="../content/.upload/<?= $productData['image_path'] ?>" alt="" class="item-image">
                 </div>
                 <div class="col-md-6">
                     <div class="flex-2-col">
-                        <h3 class="product-title" id="product-name">Jeruk Nipis Kering</h3>
+                        <h3 class="product-title" id="product-name"><?= $productData['product_name'] ?></h3>
                         <small class="text-muted">Kode Produk 1uh27b</small>
                     </div>
                     <div class="spacer"></div>
                     <p class="decription-item">
-                        100% jeruk nipis asli, kaya vitamin C, siap seduh untuk wedang lemon ataupun sajian lainnya yang praktis
+                        <?= $productData['product_desc'] ?>
                         <br>
-                        <small class="text-muted">Ukuran : 50 gram</small>
+                        <small class="text-muted">Ukuran : <?= $productData['size'] ?></small>
                     </p>
-                    <h4 class="c-green"><strong id="product-price">Rp. 28.000</strong></h4>
+                    <h4 class="c-green"><strong id="product-price"><?= toRupiah($productData['price']) ?></strong></h4>
                     <div class="spacer"></div>
                     <p><strong>Jumlah</strong></p>
                     <div class="spacer"></div>
                     <div class="flex-2-col">
                         <div class="input-item">
                             <button class="icon-item" id="minus">&#45;</button>
-                            <input type="text" name="quantity" id="qty" value=1 readonly=true>
+                            <input type="text" name="quantity" id="qty" value=1>
                             <button class="icon-item" id="plus">&plus;</button>
                         </div>
                         <button class="btn btn-cart" id="addCart">
@@ -149,68 +155,84 @@
                 </div>
             </div>
             <div id="product">
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <div class="spacer"></div>
-                    <div class="head-title">
-                        <h4>Produk Lainnya</h4>
-                        <h5><a href="#" style="cursor: pointer; text-decoration:none; color: #73AF59">Lihat Semua</a></h5>
+                <div class="spacer"></div>
+                <div class="spacer"></div>
+                <div class="spacer"></div>
+                <div class="head-title">
+                    <h4>Produk Lainnya</h4>
+                    <h5><a href="#" style="cursor: pointer; text-decoration:none; color: #73AF59">Lihat Semua</a></h5>
+                </div>
+                <div class="spacer"></div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <img src="../content/.upload/lemon-kering.jpeg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Lemon Kering</h5>
+                                <small class="text-muted">PESANTREN BABUSSALAM</small>
+                                <p>
+                                    <strong class="c-green">Rp. 32.000</strong>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="spacer"></div>
-                    <div class="row">
-                        <div class="col">
+                    <div class="col">
+                        <a href="" style="cursor:pointer; text-decoration:none;">
                             <div class="card">
-                                <img src="../content/.upload/lemon-kering.jpeg" class="card-img-top" alt="...">
+                                <img src="../content/.upload/jeruk-nipis-kering.jpeg" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">Lemon Kering</h5>
+                                    <h5 class="card-title text-black">Jeruk Nipis Kering</h5>
                                     <small class="text-muted">PESANTREN BABUSSALAM</small>
                                     <p>
-                                        <strong class="c-green">Rp. 32.000</strong>
+                                        <strong class="c-green">Rp. 28.000</strong>
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <a href="" style="cursor:pointer; text-decoration:none;">
-                                <div class="card">
-                                    <img src="../content/.upload/jeruk-nipis-kering.jpeg" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-black">Jeruk Nipis Kering</h5>
-                                        <small class="text-muted">PESANTREN BABUSSALAM</small>
-                                        <p>
-                                            <strong class="c-green">Rp. 28.000</strong>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <img src="../content/.upload/poty.jpg" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Poty</h5>
-                                    <small class="text-muted">PESANTREN AL RIFA’IE</small>
-                                    <p>
-                                        <strong class="c-green">Rp. 15.000</strong>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <img src="../content/.upload/kopi-gunung-kawi.webp" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Kopi Gunung Kawi</h5>
-                                    <small class="text-muted">De Kawi</small>
-                                    <p>
-                                        <strong class="c-green">Rp. 45.000</strong>
-                                    </p>
-                                </div>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <img src="../content/.upload/poty.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Poty</h5>
+                                <small class="text-muted">PESANTREN AL RIFA’IE</small>
+                                <p>
+                                    <strong class="c-green">Rp. 15.000</strong>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="col">
+                        <div class="card">
+                            <img src="../content/.upload/kopi-gunung-kawi.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Kopi Gunung Kawi</h5>
+                                <small class="text-muted">De Kawi</small>
+                                <p>
+                                    <strong class="c-green">Rp. 45.000</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </symbol>
+            <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+            </symbol>
+            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </symbol>
+        </svg>
+        <div class="alert alert-success d-flex align-items-center w-sm float" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <div>
+                Produk berhasil ditambahkan <a href="cart.php"><button class="btn btn-sm btn-success">Lihat Keranjang</button></a>
+            </div>
         </div>
         <div class="spacer"></div>
         <div class="spacer"></div>
@@ -313,6 +335,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/store.js"></script>
     <script>
         var myCarousel = document.querySelector('#BannerHeadline')
         var carousel = new bootstrap.Carousel(myCarousel)
