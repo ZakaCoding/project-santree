@@ -249,12 +249,20 @@ function deleteItemOnCart(index)
 
     // set data without undefined key>value
     jsonData = jsonData.filter(function (e) {
+        // data will be filtered
         return e != undefined
     });
-    // data will be filtered
 
+    
     // parsing data was filtered to localStorage('items').
     localStorage.setItem('items', JSON.stringify(jsonData));
+
+    // check data on localstorage
+    // if already 0 then remove localstorage
+    if(JSON.parse(localStorage.getItem('items')).length == 0)
+    {
+        localStorage.removeItem('items');
+    }
     // reload page for get updated data
     window.location.reload();
 }
